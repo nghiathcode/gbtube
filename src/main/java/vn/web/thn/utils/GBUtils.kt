@@ -23,4 +23,12 @@ object GBUtils {
         val calendar = Calendar.getInstance()
         return fm.format(calendar.time)
     }
+    fun dateFormat(date:Date,format: String): String {
+        var formatResult = format
+        if (isEmpty(format)) {
+            formatResult = DATE_FILE
+        }
+        val fm = SimpleDateFormat(formatResult)
+        return fm.format(date)
+    }
 }

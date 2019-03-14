@@ -4,12 +4,16 @@ import com.google.gson.Gson
 import org.json.JSONObject
 import vn.web.thn.controller.libs.YoutubeResponse
 import vn.web.thn.models.entity.tables.Video
+import vn.web.thn.models.entity.youtube.PlayerEntity
+import vn.web.thn.models.entity.youtube.StatusEntity
 import vn.web.thn.utils.GBUtils
 
 class VideosResponse: YoutubeResponse() {
     var items:MutableList<Video> = ArrayList<Video>()
     override fun onJsonData(data: JSONObject?) {
         if (data != null){
+            var status:StatusEntity = StatusEntity()
+            var player:PlayerEntity = PlayerEntity()
             if (has(data,"items")){
                 val jitems = data.getJSONArray("items")
                 for (i in 0.. (jitems.length() -1)){
@@ -42,12 +46,23 @@ class VideosResponse: YoutubeResponse() {
                             obj.tags =Gson().fromJson<ArrayList<String>>(snippet.get("tags").toString(),  ArrayList::class.java)
                         }
 
+
                     }
                     if (has(jObj,"statistics")){
                         obj.statistics = Gson().fromJson<HashMap<String,String>>(jObj.get("statistics").toString(),  HashMap::class.java)
                     }
-                    obj.dateUpdate = GBUtils.dateNow("")
-                    items.add(obj)
+                    if (has(jObj,"status")){
+                        status =Gson().fromJson<StatusEntity>(jObj.get("status").toString(),StatusEntity::class.java)
+
+                    }
+                    if (has(jObj,"player")){
+                        obj.player = Gson().fromJson<PlayerEntity>(jObj.get("player").toString(),PlayerEntity::class.java)
+                    }
+                    if (status.privacyStatus.equals("public",true)){
+                        obj.dateUpdate = GBUtils.dateNow("")
+                        items.add(obj)
+                    }
+
                 }
             }
         }

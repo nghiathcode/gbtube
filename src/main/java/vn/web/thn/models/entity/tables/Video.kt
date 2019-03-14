@@ -1,6 +1,6 @@
 package vn.web.thn.models.entity.tables
 
-import org.json.JSONObject
+import vn.web.thn.models.entity.youtube.PlayerEntity
 import java.io.Serializable
 import javax.persistence.*
 
@@ -37,4 +37,7 @@ class Video :Serializable{
     var isDelete:Int = 0
     @Column(name = "dateUpdate",length = 50)
     var dateUpdate:String = ""
+    @Lob
+    @Column(name = "player")
+    var player:PlayerEntity = PlayerEntity()
 }

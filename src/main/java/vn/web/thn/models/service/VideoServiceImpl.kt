@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import vn.web.thn.models.dao.VideoDao
 import org.hibernate.query.Query
+import vn.web.thn.models.ParameterSql
 import vn.web.thn.utils.GBUtils
 
 
@@ -44,8 +45,17 @@ open class VideoServiceImpl:VideoService {
 //        session.transaction.commit()
 //        session.close()
     }
-
-    override fun <T> getObject(table:Class<*>,clause: String?): T? {
+    fun <T>setParam(query: Query<T>, args:MutableList<ParameterSql>): Query<T> {
+        if (args.size > 0) {
+            var paramIndex = 0
+            for (obj in args) {
+                query.setParameter(paramIndex, obj.getValue())
+                paramIndex++
+            }
+        }
+        return query
+    }
+    override fun <T> getObject(table:Class<*>,clause: String?,vararg args: ParameterSql ): T? {
         val session = getSession()
         val strQuery = StringBuilder()
         strQuery.append("from ")
@@ -55,6 +65,15 @@ open class VideoServiceImpl:VideoService {
             strQuery.append(" where $clause")
         }
         var query: Query<*> = session.createQuery(strQuery.toString())
-        return query.singleResult as T
+        if (args.size > 0 && !GBUtils.isEmpty(clause)) {
+            query = setParam(query, args.toMutableList())
+        }
+        try {
+            return query.singleResult as T
+        } catch (e:Exception){
+            System.out.println(e.message)
+            return null
+        }
+
     }
 }

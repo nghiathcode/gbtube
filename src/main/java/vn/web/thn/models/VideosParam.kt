@@ -1,7 +1,7 @@
 package vn.web.thn.models
 
 class VideosParam {
-    var part = "snippet,contentDetails,statistics"
+    var part = "snippet,contentDetails,statistics,status,player"
     var key:String
     var id= ""
     constructor(video_id:String,keyApi:String = "AIzaSyDE_FRgWApb2U9zKRSc1wriLH4w5i1clfA"){
