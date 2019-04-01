@@ -14,6 +14,7 @@ class VideosResponse: YoutubeResponse() {
         if (data != null){
             var status:StatusEntity = StatusEntity()
             var player:PlayerEntity = PlayerEntity()
+            var liveBroadcastContent = ""
             if (has(data,"items")){
                 val jitems = data.getJSONArray("items")
                 for (i in 0.. (jitems.length() -1)){
@@ -22,8 +23,27 @@ class VideosResponse: YoutubeResponse() {
                     if (has(jObj,"id")){
                         obj.videoID = jObj.getString("id")
                     }
+                    if (has(jObj,"contentDetails")){
+                        var contentDetails = jObj.getJSONObject("contentDetails")
+                        if (has(contentDetails,"regionRestriction")){
+                            val regionRestriction = contentDetails.getJSONObject("regionRestriction")
+                            if (has(regionRestriction,"blocked")){
+                                val lst = Gson().fromJson<ArrayList<String>>(regionRestriction.get("blocked").toString(),ArrayList::class.java)
+                                if (lst.size>0){
+                                    continue
+                                }
+                            }
+                        }
+                    }
                     if (has(jObj,"snippet")){
+
                         var snippet = jObj.getJSONObject("snippet")
+                        if (has(snippet,"liveBroadcastContent")){
+                            liveBroadcastContent = snippet.getString("liveBroadcastContent")
+                            if (liveBroadcastContent.equals("live",true)){
+                                continue
+                            }
+                        }
                         if (has(snippet,"publishedAt")){
                             obj.publishedAt = snippet.getString("publishedAt")
                         }
@@ -45,9 +65,12 @@ class VideosResponse: YoutubeResponse() {
                         if (has(snippet,"tags")){
                             obj.tags =Gson().fromJson<ArrayList<String>>(snippet.get("tags").toString(),  ArrayList::class.java)
                         }
-
+                        if (has(snippet,"categoryId")){
+                            obj.categoryId = snippet.getString("categoryId")
+                        }
 
                     }
+
                     if (has(jObj,"statistics")){
                         obj.statistics = Gson().fromJson<HashMap<String,String>>(jObj.get("statistics").toString(),  HashMap::class.java)
                     }
@@ -58,9 +81,19 @@ class VideosResponse: YoutubeResponse() {
                     if (has(jObj,"player")){
                         obj.player = Gson().fromJson<PlayerEntity>(jObj.get("player").toString(),PlayerEntity::class.java)
                     }
-                    if (status.privacyStatus.equals("public",true)){
+                    if (status.privacyStatus.equals("public",true) && status.publicStatsViewable){
                         obj.dateUpdate = GBUtils.dateNow("")
-                        items.add(obj)
+                        if (videoService!= null) {
+                            videoService!!.select(Video::class.java)
+                            videoService!!.where("videoID = ?0")
+                            videoService!!.setParam(*arrayOf<ParameterSql>(ParameterSql(String::class,obj.videoID)))
+
+                            if (videoService!!.getObject<Video>()== null){
+                                items.add(obj)
+                            }
+                        } else {
+                            items.add(obj)
+                        }
                     }
 
                 }

@@ -5,6 +5,7 @@ import kotlin.reflect.KClass
 import org.json.JSONArray
 import org.json.JSONObject
 import org.json.JSONTokener
+import vn.web.thn.models.service.VideoService
 import kotlin.reflect.full.createInstance
 
 
@@ -16,7 +17,8 @@ open class YoutubeResponse() {
     val TAG = "YoutubeResponse"
     lateinit var responseType: GBResponseType
     lateinit var dataResponse: String
-
+    var apiLimit = false
+    var videoService: VideoService? = null
     init {
 
     }
@@ -25,10 +27,11 @@ open class YoutubeResponse() {
         this.responseType = responseType
     }
 
-    open fun <T:YoutubeResponse>toResponse(clazz: KClass<out T>, callBackError:Any? = null): T? {
+    open fun <T:YoutubeResponse>toResponse(clazz: KClass<out T>, videoService: VideoService? = null): T? {
         val response: YoutubeResponse
         try {
             response = clazz.createInstance()
+            response.videoService = videoService
             response.dataResponse = dataResponse
             response.responseType = responseType
             response.parser()
@@ -63,7 +66,13 @@ open class YoutubeResponse() {
             if (!GBUtils.isEmpty(dataResponse)){
                 val dataJson = JSONTokener(dataResponse).nextValue()
                 if (dataJson is JSONObject){
-                    onJsonData(dataJson)
+                    if (has(dataJson,"error")){
+                        apiLimit = true
+
+                    }else {
+                        apiLimit = false
+                        onJsonData(dataJson)
+                    }
                 } else if (dataJson is JSONArray){
                     onJsonArrayData(dataJson)
                 }

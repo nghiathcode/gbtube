@@ -18,6 +18,6 @@ class RestGetDataController {
     @RequestMapping(value = ["/data"], method = arrayOf(RequestMethod.GET))
     fun homPage(): ResponseEntity<*> {
         val lst =videoService.getList<Video>(Video::class.java)
-        return ResponseEntity.ok<Any>(ApiResponse(ErrorResponse(),lst))
+        return ResponseEntity.ok<Any>(ApiResponse(ErrorResponse(),null,null))
     }
 }

@@ -9,9 +9,13 @@ import vn.web.thn.utils.GBUtils
 class SearchResponse:YoutubeResponse() {
 //    var items:MutableList<Video> = ArrayList<Video>()
     var listId = StringBuilder()
+    var pageToken = ""
 
     override fun onJsonData(data: JSONObject?) {
         if (data != null){
+            if (has(data,"nextPageToken")){
+                pageToken = data.getString("nextPageToken")
+            }
             if (has(data,"items")){
                 val jitems = data.getJSONArray("items")
                 for (i in 0.. (jitems.length() -1)){
@@ -25,30 +29,9 @@ class SearchResponse:YoutubeResponse() {
 //                            obj.videoID = id_obj.get("videoId")!!
                         }
                     }
-//                    if (has(jObj,"snippet")){
-//                        var snippet = jObj.getJSONObject("snippet")
-//                        if (has(snippet,"publishedAt")){
-//                            obj.publishedAt = snippet.getString("publishedAt")
-//                        }
-//                        if (has(snippet,"channelId")){
-//                            obj.channelID = snippet.getString("channelId")
-//                        }
-//                        if (has(snippet,"title")){
-//                            obj.title = snippet.getString("title")
-//                        }
-//                        if (has(snippet,"description")){
-//                            obj.description = snippet.getString("description")
-//                        }
-//                        if (has(snippet,"thumbnails")){
-//                            obj.thumbnails = Gson().fromJson<HashMap<String,String>>(snippet.get("thumbnails").toString(),  HashMap::class.java)
-//                        }
-//                        if (has(snippet,"channelTitle")){
-//                            obj.channelTitle = snippet.getString("channelTitle")
-//                        }
-//                    }
-//                    obj.dateUpdate = GBUtils.dateNow("")+i.toString()
-//                    items.add(obj)
-
+                }
+                if (listId.length == 0){
+                    pageToken = ""
                 }
             }
         }

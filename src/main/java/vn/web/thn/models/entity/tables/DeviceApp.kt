@@ -28,4 +28,7 @@ class DeviceApp : Serializable {
     var appVersion:String = ""
     @Column(name = "lastRequest")
     var lastRequest:String = ""
+    @Lob
+    @Column(name = "keyWord")
+    var keyWord:String = ""
 }

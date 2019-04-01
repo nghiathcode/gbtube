@@ -5,4 +5,5 @@ object ResponseCode {
     val NO_ERROR = 100
     val TOKEN_REGISTER = 101
     val TOKEN_EXPIRED = 102
+    val ERROR_INSERT = 103
 }

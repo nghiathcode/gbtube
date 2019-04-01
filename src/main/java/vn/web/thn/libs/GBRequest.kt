@@ -2,6 +2,10 @@ package vn.web.thn.controller.libs
 
 import okhttp3.*
 import vn.web.thn.utils.GBUtils
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.net.HttpURLConnection
+import java.net.URL
 
 abstract class GBRequest : Callback{
     protected var mClient: OkHttpClient
@@ -111,6 +115,26 @@ abstract class GBRequest : Callback{
      */
     open fun execute() {
         try {
+            val con: HttpURLConnection
+            var urlConnect = URL("")
+            con = urlConnect.openConnection() as HttpURLConnection
+            con.doOutput = true
+            con.doInput = true
+            con.connectTimeout = 500
+            con.requestMethod = "GET"
+            if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                val inputStream = BufferedReader(
+                        InputStreamReader(con.inputStream, "UTF-8"))
+                var inputLine: String
+                val response = StringBuilder()
+                inputLine = inputStream.readLine()
+                while (inputLine != null) {
+                    response.append(inputLine)
+                    inputLine = inputStream.readLine()
+                }
+                inputStream.close()
+            }
+
             var builder = Request.Builder()
 
             builder = builder.url(makeUrl())

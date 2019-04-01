@@ -16,10 +16,10 @@ class HomeController {
     private lateinit var videoService: VideoService
     @RequestMapping(value = "/",method = arrayOf(RequestMethod.GET))
     fun homePage(model: Model):String{
-        val lst =videoService.getList<Video>(Video::class.java)
-        if (lst.size>0) {
-            System.out.println(lst.get(0).videoID)
-        }
+//        val lst =videoService.getList<Video>(Video::class.java)
+//        if (lst.size>0) {
+//            System.out.println(lst.get(0).videoID)
+//        }
         return "index"
     }
 }

@@ -11,4 +11,13 @@ interface VideoService {
     fun <T> save(entity: T)
     fun <T> save(lst: MutableList<T>)
     fun <T>getObject(table:Class<*>,clause: String? = null,vararg args: ParameterSql = arrayOf()):T?
+    fun select(table:Class<*>):VideoService
+    fun where(where:String):VideoService
+    fun limit(first:Int = 0,maxResult:Int = 0):VideoService
+    fun <T>getList():MutableList<T>
+    fun <T>getObject():T?
+    fun setParam(vararg args: ParameterSql = arrayOf())
+    fun orderBy(isASC:Boolean,column:String):VideoService
+    fun search(q:String):VideoService
+    fun setListParameter(paramName: String, listParameter: List<*>): VideoService
 }

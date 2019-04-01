@@ -40,4 +40,8 @@ class Video :Serializable{
     @Lob
     @Column(name = "player")
     var player:PlayerEntity = PlayerEntity()
+    @Column(name = "categoryIdVideo")
+    var categoryId:String = ""
+    @Column(name = "appID")
+    var appID:String = "vn.android.thn.gbkids"
 }

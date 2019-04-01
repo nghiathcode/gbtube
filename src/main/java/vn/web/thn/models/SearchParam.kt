@@ -13,10 +13,11 @@ class SearchParam {
     var key:String
     var type ="video"//channel,playlist,video
 
-    var order =""//rating,date,relevance,title,videoCount,viewCount
+    var order ="viewCount"//rating,date,relevance,title,videoCount,viewCount
     var pageToken = ""
     var eventType ="completed"//completed,live,upcoming
-    constructor(q:String,keyApi:String = "AIzaSyDE_FRgWApb2U9zKRSc1wriLH4w5i1clfA"){
+    var videoEmbeddable = "true"
+    constructor(q:String,keyApi:String ){
         this.key = keyApi
         this.q = q
     }
@@ -29,6 +30,7 @@ class SearchParam {
 //        param.put("eventType",eventType)
         if (!GBUtils.isEmpty(type)){
             param.put("type",type)
+
 //            if (type.equals("video",true)){
 //                param.put("videoEmbeddable","true")
 //                param.put("videoType","movie")
@@ -41,6 +43,8 @@ class SearchParam {
         if (!GBUtils.isEmpty(pageToken)){
             param.put("pageToken",pageToken)
         }
+//        param.put("videoEmbeddable",videoEmbeddable)
+
         return param
     }
 }

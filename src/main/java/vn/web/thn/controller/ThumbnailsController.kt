@@ -44,7 +44,6 @@ class ThumbnailsController {
                 var jsonObject = JSONObject()
                 if (obj.thumbnails.containsKey("default")){
                     jsonObject = JSONObject(Gson().toJson(obj.thumbnails.get("default"), Map::class.java))
-
                     return jsonObject.getString("url")
                 } else if (obj.thumbnails.containsKey("medium")){
                     jsonObject = JSONObject(Gson().toJson(obj.thumbnails.get("medium"), Map::class.java))
