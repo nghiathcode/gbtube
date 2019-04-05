@@ -12,6 +12,7 @@ class VideosResponse: YoutubeResponse() {
     var items:MutableList<Video> = ArrayList<Video>()
     override fun onJsonData(data: JSONObject?) {
         if (data != null){
+
             var status:StatusEntity = StatusEntity()
             var player:PlayerEntity = PlayerEntity()
             var liveBroadcastContent = ""
@@ -23,18 +24,18 @@ class VideosResponse: YoutubeResponse() {
                     if (has(jObj,"id")){
                         obj.videoID = jObj.getString("id")
                     }
-                    if (has(jObj,"contentDetails")){
-                        var contentDetails = jObj.getJSONObject("contentDetails")
-                        if (has(contentDetails,"regionRestriction")){
-                            val regionRestriction = contentDetails.getJSONObject("regionRestriction")
-                            if (has(regionRestriction,"blocked")){
-                                val lst = Gson().fromJson<ArrayList<String>>(regionRestriction.get("blocked").toString(),ArrayList::class.java)
-                                if (lst.size>0){
-                                    continue
-                                }
-                            }
-                        }
-                    }
+//                    if (has(jObj,"contentDetails")){
+//                        var contentDetails = jObj.getJSONObject("contentDetails")
+//                        if (has(contentDetails,"regionRestriction")){
+//                            val regionRestriction = contentDetails.getJSONObject("regionRestriction")
+//                            if (has(regionRestriction,"blocked")){
+//                                val lst = Gson().fromJson<ArrayList<String>>(regionRestriction.get("blocked").toString(),ArrayList::class.java)
+//                                if (lst.size>0){
+//                                    continue
+//                                }
+//                            }
+//                        }
+//                    }
                     if (has(jObj,"snippet")){
 
                         var snippet = jObj.getJSONObject("snippet")
@@ -81,7 +82,8 @@ class VideosResponse: YoutubeResponse() {
                     if (has(jObj,"player")){
                         obj.player = Gson().fromJson<PlayerEntity>(jObj.get("player").toString(),PlayerEntity::class.java)
                     }
-                    if (status.privacyStatus.equals("public",true) && status.publicStatsViewable){
+//                    if (status.privacyStatus.equals("public",true) && status.publicStatsViewable){
+                    if (status.privacyStatus.equals("public",true) ){
                         obj.dateUpdate = GBUtils.dateNow("")
                         if (videoService!= null) {
                             videoService!!.select(Video::class.java)

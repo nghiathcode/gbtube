@@ -69,7 +69,7 @@ abstract class ApiBaseController {
         var param= VideosParam(videoIDList,apiKey)
         api.mParameters = param.toParamRequest()
         api.get().execute(object : YoutubeRequestCallBack {
-            override fun onResponse(httpCode: Int, response: YoutubeResponse, request: GBVideoRequest) {
+            override fun onResponse(httpCode: Int, response: YoutubeResponse, request: Any) {
                 var result = response.toResponse(VideosResponse::class,videoService)!!
                 if (!result.apiLimit) {
                     val list = result.items

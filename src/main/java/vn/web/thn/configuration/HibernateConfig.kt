@@ -38,6 +38,7 @@ open class HibernateConfig {
         dataSource.setUrl(environment.getRequiredProperty("ds.url"))
         dataSource.setUsername(environment.getRequiredProperty("ds.username"))
         dataSource.setPassword(environment.getRequiredProperty("ds.password"))
+
         return dataSource
     }
 
@@ -48,7 +49,9 @@ open class HibernateConfig {
         properties.put("hibernate.format_sql", environment.getRequiredProperty("hibernate.format_sql"))
         properties.put("hibernate.hbm2ddl.auto", environment.getRequiredProperty("hibernate.ddl-auto"))
         properties.put("current_session_context_class", environment.getRequiredProperty("current_session_context_class"))
-
+        properties.put("hibernate.connection.CharSet", environment.getRequiredProperty("hibernate.connection.CharSet"))
+        properties.put("hibernate.connection.useUnicode", environment.getRequiredProperty("hibernate.connection.useUnicode"))
+        properties.put("hibernate.connection.characterEncoding", environment.getRequiredProperty("hibernate.connection.characterEncoding"))
         return properties
     }
     @Bean

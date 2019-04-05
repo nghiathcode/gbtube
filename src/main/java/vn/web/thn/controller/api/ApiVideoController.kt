@@ -19,6 +19,27 @@ import vn.web.thn.utils.GBUtils
 @RequestMapping(value = ["/api/v1.0"])
 class ApiVideoController:ApiBaseController() {
     private val logger = Log4jMLog.getLogger(ApiVideoController::class.java)
+    @RequestMapping(value = ["/{videoId}/delete"], method = arrayOf(RequestMethod.DELETE))
+    fun deleteVideo(@RequestHeader headers: HttpHeaders,@PathVariable videoId: String): ResponseEntity<*> {
+        var token = headers.get("token")
+        var appId = headers.get("appId")
+        if (token != null && appId!= null){
+            val tokenCheckError = checkToken(token.get(0),appId.get(0))
+            if (tokenCheckError.errorCode == ResponseCode.NO_ERROR){
+                val query = " videoID = '" +videoId+"'"
+                var obj =videoService.getObject<Video>(Video::class.java,query)
+                if (obj!= null) {
+                    obj.isDelete = 1
+                    videoService.save(obj)
+                }
+            }
+            return ResponseEntity.ok<Any>(ApiResponse(tokenCheckError,appStatus(HeaderParam(headers)),null))
+        } else{
+            return ResponseEntity.ok<Any>(ApiResponse(ErrorResponse(ResponseCode.TOKEN_INPUT,"not input token"),appStatus(HeaderParam(headers)),null))
+        }
+
+
+    }
     @RequestMapping(value = ["/new"], method = arrayOf(RequestMethod.GET))
     fun newVideoListWithCategory(@RequestHeader headers: HttpHeaders): ResponseEntity<*> {
         var token = headers.get("token")

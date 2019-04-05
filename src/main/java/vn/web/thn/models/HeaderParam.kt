@@ -8,9 +8,20 @@ class HeaderParam (headers: HttpHeaders){
     var osType:String = "0"
     var deviceType:String = "0"
     init {
-         token = headers.get("token")!!.get(0)
-         appId = headers.get("appId")!!.get(0)
-        osType = headers.get("osType")!!.get(0)
-        deviceType = headers.get("deviceType")!!.get(0)
+        if (headers.get("token")!= null) {
+            token = headers.get("token")!!.get(0)
+        }
+        if (headers.get("appId")!= null) {
+            appId = headers.get("appId")!!.get(0)
+        }
+
+        if (headers.get("osType")!= null) {
+            osType = headers.get("osType")!!.get(0)
+        }
+
+        if (headers.get("deviceType")!= null) {
+            deviceType = headers.get("deviceType")!!.get(0)
+        }
+
     }
 }

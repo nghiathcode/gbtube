@@ -14,6 +14,7 @@ class Video :Serializable{
     @Column(name = "title")
     lateinit var title:String
     @Lob
+
     @Column(name = "description")
     lateinit var description:String
     @Column(name = "channelID", length = 50)

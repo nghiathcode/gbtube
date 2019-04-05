@@ -43,25 +43,33 @@ class SearchController {
             api.mParameters = param.toParamRequest()
 
             api.get().execute(object :YoutubeRequestCallBack{
-                override fun onResponse(httpCode: Int, response: YoutubeResponse, request: GBVideoRequest) {
-                    var result = response.toResponse(SearchResponse::class,videoService)!!
-                    if (!result.apiLimit) {
-                        if (result.listId.length > 0) {
-                            val list = result.listId
-                            var pageToken = result.pageToken
-                            System.out.println("pageToken:" + pageToken)
-                            loadDetailVideo(list.substring(1), keyApi,lstKey.get(0).emailApi)
-                            if (!GBUtils.isEmpty(pageToken)) {
-                                getSearch(pageToken)
+                override fun onResponse(httpCode: Int, response: YoutubeResponse, request: Any) {
+                    if (httpCode == 200){
+                        var result = response.toResponse(SearchResponse::class,videoService)!!
+                        if (!result.apiLimit) {
+                            if (result.listId.length > 0) {
+                                val list = result.listId
+                                var pageToken = result.pageToken
+                                System.out.println("pageToken:" + pageToken)
+                                loadDetailVideo(list.substring(1), keyApi,lstKey.get(0).emailApi)
+                                if (!GBUtils.isEmpty(pageToken)) {
+                                    getSearch(pageToken)
+                                }
                             }
-                        }
 
-                    } else {
+                        } else {
+                            var api = lstKey.get(0)
+                            api.api_limit_date = dateNow
+                            videoService.save(api)
+                            getSearch(pageToken)
+                        }
+                    }else {
                         var api = lstKey.get(0)
                         api.api_limit_date = dateNow
                         videoService.save(api)
                         getSearch(pageToken)
                     }
+
                 }
 
                 override fun onRequestError(errorRequest: Any, request: GBVideoRequest) {
@@ -77,12 +85,31 @@ class SearchController {
         var param=VideosParam(videoID,apiKey)
         api.mParameters = param.toParamRequest()
         api.get().execute(object :YoutubeRequestCallBack{
-            override fun onResponse(httpCode: Int, response: YoutubeResponse, request: GBVideoRequest) {
-                var result = response.toResponse(VideosResponse::class,videoService)!!
-                if (!result.apiLimit) {
-                    val list = result.items
-                    videoService.save(list)
-                } else {
+            override fun onResponse(httpCode: Int, response: YoutubeResponse, request: Any) {
+                if (httpCode == 200){
+                    var result = response.toResponse(VideosResponse::class,videoService)!!
+                    if (!result.apiLimit) {
+                        val list = result.items
+                        videoService.save(list)
+                    } else {
+                        var calendar = Calendar.getInstance()
+                        var dateNow = GBUtils.dateFormat(calendar.time,"yyyyMMdd")
+                        var apiKeyupdate = ApiKey()
+                        apiKeyupdate.api_limit_date =dateNow
+                        apiKeyupdate.emailApi = email
+                        apiKeyupdate.api_key = apiKey
+                        videoService.save(apiKeyupdate)
+                        videoService.select(ApiKey::class.java)
+                        videoService.where("api_limit_date < ?0")
+                        videoService.setParam(*arrayOf<ParameterSql>(ParameterSql(String::class,dateNow)))
+                        val lstKey = videoService.getList<ApiKey>()
+
+                        if (lstKey.size>0){
+                            loadDetailVideo(videoID,lstKey.get(0).api_key,email)
+                        }
+
+                    }
+                }else {
                     var calendar = Calendar.getInstance()
                     var dateNow = GBUtils.dateFormat(calendar.time,"yyyyMMdd")
                     var apiKeyupdate = ApiKey()
@@ -100,6 +127,7 @@ class SearchController {
                     }
 
                 }
+
             }
             override fun onRequestError(errorRequest: Any, request: GBVideoRequest) {
 

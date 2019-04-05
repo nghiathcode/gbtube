@@ -45,7 +45,7 @@
           <element id="library" level="project" name="Maven: com.squareup.okhttp3:okhttp:3.9.0" />
           <element id="library" level="project" name="Maven: com.squareup.okio:okio:1.13.0" />
           <element id="library" level="project" name="Maven: com.squareup.okhttp3:okhttp-urlconnection:3.9.0" />
-          <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.6" />
+          <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.47" />
           <element id="library" level="project" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.71" />
           <element id="library" level="project" name="Maven: org.jetbrains.kotlin:kotlin-stdlib:1.2.71" />
           <element id="library" level="project" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-common:1.2.71" />
@@ -54,6 +54,7 @@
           <element id="library" level="project" name="Maven: org.jetbrains.kotlin:kotlin-reflect:1.2.71" />
           <element id="library" level="project" name="Maven: org.json:json:20180813" />
           <element id="library" level="project" name="Maven: commons-io:commons-io:2.6" />
+          <element id="library" level="project" name="Maven: log4j:log4j:1.2.17" />
         </element>
       </element>
       <element id="directory" name="META-INF">

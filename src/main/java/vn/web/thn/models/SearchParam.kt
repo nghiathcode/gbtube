@@ -17,6 +17,11 @@ class SearchParam {
     var pageToken = ""
     var eventType ="completed"//completed,live,upcoming
     var videoEmbeddable = "true"
+    var videoDefinition = "any"
+    var videoDuration = "long"
+    var videoType = "movie"
+    var maxResults = "50"
+    var channelId = "UC3KknIJZXRygH2pZ6MDtGbg"
     constructor(q:String,keyApi:String ){
         this.key = keyApi
         this.q = q
@@ -25,17 +30,20 @@ class SearchParam {
         var param = HashMap<String, String>()
         param.put("part",part)
         param.put("key",key)
-        param.put("maxResults","50")
-        param.put("q",q)
+        param.put("maxResults",maxResults)
+//        param.put("q",q)
+        param.put("channelId",channelId)
 //        param.put("eventType",eventType)
         if (!GBUtils.isEmpty(type)){
             param.put("type",type)
 
-//            if (type.equals("video",true)){
-//                param.put("videoEmbeddable","true")
-//                param.put("videoType","movie")
-//                param.put("eventType","upcoming")
-//            }
+            if (type.equals("video",true)){
+//                param.put("videoDuration",videoDuration)
+                param.put("videoEmbeddable",videoEmbeddable)
+//                param.put("videoType",videoType)
+//                param.put("eventType",eventType)
+                param.put("videoDefinition",videoDefinition)
+            }
         }
         if (!GBUtils.isEmpty(order)){
             param.put("order",order)

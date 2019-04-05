@@ -7,7 +7,7 @@ import javax.persistence.*
 @Table(name = "key_word",uniqueConstraints=arrayOf(UniqueConstraint(columnNames = arrayOf("keyword", "appID"))))
 class KeyWord: Serializable {
     @Id
-    @Column(name = "keyword",length = 255)
+    @Column(name = "keyword",length = 100)
     var keyword = ""
     @Id
     @Column(name = "appID",length = 30)

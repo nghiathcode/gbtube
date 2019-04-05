@@ -43,34 +43,34 @@ open class GBVideoRequest:GBRequest {
     }
 
     override fun execute() {
-//        super.execute()
-        try {
-            val con: HttpURLConnection
-            var urlConnect = URL(makeUrl())
-            con = urlConnect.openConnection() as HttpURLConnection
-            con.doOutput = true
-            con.doInput = true
-            con.connectTimeout = 500
-            con.requestMethod = "GET"
-            if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                val inputStream = BufferedReader(
-                        InputStreamReader(con.inputStream, "UTF-8"))
-                var inputLine: String?=""
-                val response = StringBuffer()
-
-                while (inputLine!= null) {
-                    response.append(inputLine)
-                    inputLine = inputStream.readLine()
-                }
-                inputStream.close()
-                if (mRequestListener != null) {
-                    val callBack = mRequestListener as YoutubeRequestCallBack
-                    callBack.onResponse(200, YoutubeResponse(response.toString()!!,responseType), this)
-                }
-            }
-        }catch (e:Exception){
-            System.out.print("error read stream")
-        }
+        super.execute()
+//        try {
+//            val con: HttpURLConnection
+//            var urlConnect = URL(makeUrl())
+//            con = urlConnect.openConnection() as HttpURLConnection
+//            con.doOutput = true
+//            con.doInput = true
+//            con.connectTimeout = 500
+//            con.requestMethod = "GET"
+//            if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+//                val inputStream = BufferedReader(
+//                        InputStreamReader(con.inputStream, "UTF-8"))
+//                var inputLine: String?=""
+//                val response = StringBuffer()
+//
+//                while (inputLine!= null) {
+//                    response.append(inputLine)
+//                    inputLine = inputStream.readLine()
+//                }
+//                inputStream.close()
+//                if (mRequestListener != null) {
+//                    val callBack = mRequestListener as YoutubeRequestCallBack
+//                    callBack.onResponse(200, YoutubeResponse(response.toString()!!,responseType), this)
+//                }
+//            }
+//        }catch (e:Exception){
+//            System.out.print("error read stream")
+//        }
     }
     override fun onResponse(p0: Call, response: Response) {
         val body = response.body()?.string()

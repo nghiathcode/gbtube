@@ -7,7 +7,7 @@ interface YoutubeRequestCallBack {
      * @param response
      * @param objRequest
      */
-    fun  onResponse(httpCode: Int,response: YoutubeResponse, request: GBVideoRequest)
+    fun  onResponse(httpCode: Int,response: YoutubeResponse, request: Any)
 
     /**
      *

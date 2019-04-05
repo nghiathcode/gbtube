@@ -6,6 +6,9 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
+import com.sun.corba.se.spi.presentation.rmi.StubAdapter.request
+
+
 
 abstract class GBRequest : Callback{
     protected var mClient: OkHttpClient
@@ -84,7 +87,7 @@ abstract class GBRequest : Callback{
     /**
      * makeUrl
      */
-    open protected fun makeUrl(): String {
+    open fun makeUrl(): String {
         var urlRequest:StringBuilder = StringBuilder()
         urlRequest.append(getDomain());
         if (!GBUtils.isEmpty(getPath())){
@@ -115,25 +118,25 @@ abstract class GBRequest : Callback{
      */
     open fun execute() {
         try {
-            val con: HttpURLConnection
-            var urlConnect = URL("")
-            con = urlConnect.openConnection() as HttpURLConnection
-            con.doOutput = true
-            con.doInput = true
-            con.connectTimeout = 500
-            con.requestMethod = "GET"
-            if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                val inputStream = BufferedReader(
-                        InputStreamReader(con.inputStream, "UTF-8"))
-                var inputLine: String
-                val response = StringBuilder()
-                inputLine = inputStream.readLine()
-                while (inputLine != null) {
-                    response.append(inputLine)
-                    inputLine = inputStream.readLine()
-                }
-                inputStream.close()
-            }
+//            val con: HttpURLConnection
+//            var urlConnect = URL("")
+//            con = urlConnect.openConnection() as HttpURLConnection
+//            con.doOutput = true
+//            con.doInput = true
+//            con.connectTimeout = 500
+//            con.requestMethod = "GET"
+//            if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+//                val inputStream = BufferedReader(
+//                        InputStreamReader(con.inputStream, "UTF-8"))
+//                var inputLine: String
+//                val response = StringBuilder()
+//                inputLine = inputStream.readLine()
+//                while (inputLine != null) {
+//                    response.append(inputLine)
+//                    inputLine = inputStream.readLine()
+//                }
+//                inputStream.close()
+//            }
 
             var builder = Request.Builder()
 
@@ -170,9 +173,21 @@ abstract class GBRequest : Callback{
                 builder.method("GET", null)
             }
             var request: Request = builder.build()
-            mClient.newCall(request).enqueue(this)
+
+//            mClient.newCall(request).enqueue(this)
+
+            val response = mClient.newCall(request).execute()
+
+            if (mRequestListener != null) {
+                val callBack = mRequestListener as YoutubeRequestCallBack
+                callBack.onResponse(response.code(), YoutubeResponse(response.body()!!.string(),responseType), this)
+            }
         } catch (e:Exception){
             exceptionError()
+            if (mRequestListener != null) {
+
+
+            }
         }
 
     }
